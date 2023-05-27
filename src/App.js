@@ -1,23 +1,37 @@
-import logo from './logo.svg';
-import './App.css';
+import { useState, memo, useMemo, useCallback } from "react";
+import "./App.css";
+
+function Swatch({ params }) {
+  console.log(`Swatch rendered ${params.color}`);
+  return (
+    <div style={{ margin: 2, width: 75, height: 75, background: params.color }}></div>
+  );
+}
+
+const MemodedSwatch = memo(Swatch);
+
+
 
 function App() {
+  const [appRenderIndex, setAppRenderIndex] = useState(0);
+  const [color, setColor] = useState("red");
+  console.log(`App Rendered ${appRenderIndex}`);
+  const params = useMemo(() => ({color}), [color]);
+  const onClick = useCallback(() => {}, [])
+
   return (
     <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+      <div>
+        <button onClick={() => setAppRenderIndex(appRenderIndex + 1)}>
+          Re-Render App
+        </button>
+        <button onClick={() => setColor(color === "red" ? "blue" : "red")}>
+          change color
+        </button>
+      </div>
+      <div>
+        <MemodedSwatch params={params} onClick={onClick}/>
+      </div>
     </div>
   );
 }
